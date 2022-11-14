@@ -92,49 +92,45 @@ vector<string> genPermutations(string w) {
 
 int maze[6][6] =
     {
-        {2, 2, 2, 0, 0, 0},
-        {0, 0, 2, 0, 0, 0},
-        {0, 0, 3, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0}};
+        {2, 2, 2, 0, 3, 0},
+        {0, 0, 2, 0, 0, 2},
+        {0, 0, 2, 2, 2, 2},
+        {0, 0, 0, 0, 0, 2},
+        {0, 2, 2, 2, 2, 2},
+        {0, 0, 0, 2, 0, 0}};
 
-bool findCheese(int y, int x)
+bool findCheese(int row, int col)
 {
-    if ((x < 0) || (x > 5)) {
-        // row outside maze
+    if ((row < 0) || (row > 5)) {
+        // Mouse outside the maze
         return false;
     }
-    if ((y < 0) || (y > 5)) {
-        // colummn outside maze
+    if ((col < 0) || (col > 5)) {
+        // Mouse outside the maze 
         return false;
     }
-    if (maze[y][x] == 3) {
-        // Cheese found
-        return true;
-    }
-    if (maze[y][x] == 0) {
-        // Wall found
+    if (maze[row][col] == 0) {
+        // Mouse hit a wall
         return false;
     }
-    if (maze[y][x] == 1) {
-        // Space previously visited
+    if (maze[row][col] == 3) {
+        // Mouse found cheese
+        return true;
+    }
+    if (maze[row][col] == -1) {
+        // Mouse revisited a space
         return false;
     }
-    maze[y][x] = 1; // Mark space visited. Prevents starvation
-    if (findCheese(y-1,x)) {
-        return true;
-    }
-    if (findCheese(y,x+1)) {
-        return true;
-    }
-    if (findCheese(y+1,x)) {
-        return true;
-    }
-    if (findCheese(y,x-1)) {
-        return true;
-    }
+
+    maze[row][col] = -1; // Mark the spot
+
+    if (findCheese(row,col+1)) return true; // Search right
+    if (findCheese(row+1,col)) return true; // Search down
+    if (findCheese(row,col-1)) return true; // Search left
+    if (findCheese(row-1,col)) return true; // Search up
+
     return false;
+
 }
 
 int main() {
@@ -154,13 +150,15 @@ int main() {
     // for (int i = 0; i <= 50; i++)
     //     cout << "recFibo(" << i << ") = " << recFibo(i) << endl;
 
-    cout << iterIsPalindrome("radar") << endl;
+    // cout << iterIsPalindrome("radar") << endl;
 
-    vector<string> eatPerms = genPermutations("Bienvenido");
+    // vector<string> eatPerms = genPermutations("Bienvenido");
 
-    for (int i=0; i<eatPerms.size(); i++) {
-        cout << "Next word is: " << eatPerms[i] << endl;
-    }
+    // for (int i=0; i<eatPerms.size(); i++) {
+    //     cout << "Next word is: " << eatPerms[i] << endl;
+    // }
+
+    cout << findCheese(0,0) << endl;
 
     exit(0);
 }
